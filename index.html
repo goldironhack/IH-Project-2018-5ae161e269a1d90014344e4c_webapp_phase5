@@ -3,13 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Hello World!</h1>
-        <button id="btn">Click me</button>
-    </div>
-    <script src="index.js"></script>
+   <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 16,
+          center: new google.maps.LatLng(40,-75),
+        });
+         
+        
+        script.src = 'https://data.cityofnewyork.us/api/views/xyye-rtrs/rows.json?accessType=DOWNLOAD&jsonp=myfun';
+        document.getElementsByTagName('head')[0].appendChild(script);
+      }
+      var script = document.createElement('script');
+      window.myfun = function(results) {
+        for (var i = 0; i < results.data.length; i++) {
+
+           var arr =  results.data[i];
+           var str = arr[10]
+           console.log(arr)
+           var c1 = str.substr(8,17)
+           var c2 = str.substr(28,15)
+           c2 = c2.replace(")","")
+            var latLng = new google.maps.LatLng(c2,c1);
+            var marker = new google.maps.Marker({
+              position: latLng,
+              map: map
+            });
+
+            
+            var infowindow = new google.maps.InfoWindow({
+              content: contentString,
+            });
+            var contentString = "<h3 class='title'>"+arr[10]+"</h3>";
+             marker.addListener('click', function() {
+                map.center = new google.maps.LatLng(c2,c1);
+                infowindow.open(map,marker);
+            });
+          
+        }
+      }
+      
+    </script>
 </body>
 </html>
